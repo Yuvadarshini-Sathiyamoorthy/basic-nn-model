@@ -69,7 +69,7 @@ from google.auth import default
 auth.authenticate_user()
 creds, _ = default()
 gc = gspread.authorize(creds)
-worksheet=gc.open('Untitled spreadsheet').sheet1
+worksheet=gc.open('student_data').sheet1
 data=worksheet.get_all_values()
 
 dataset1=pd.DataFrame(data[1:],columns=data[0])
