@@ -6,11 +6,15 @@ To develop a neural network regression model for the given dataset.
 
 ## THEORY
 
-Explain the problem statement
+Neural Network regression model is a type of machine learning algorithm inspired by the structure of the brain. It excels at identifying complex patterns within data and using those patterns to predict continuous numerical values.his includes cleaning, normalizing, and splitting your data into training and testing sets. The training set is used to teach the model, and the testing set evaluates its accuracy. This means choosing the number of layers, the number of neurons within each layer, and the type of activation functions to use.The model is fed the training data.Once trained, you use the testing set to see how well the model generalizes to new, unseen data. This often involves metrics like Mean Squared Error (MSE) or Root Mean Squared Error (RMSE).Based on the evaluation, you might fine-tune the model's architecture, change optimization techniques, or gather more data to improve its performance.
+
+![image](https://github.com/user-attachments/assets/4c944a47-f65f-422d-b335-f6ed484ed8b1)
+
 
 ## Neural Network Model
 
-Include the neural network model diagram.
+![model](https://github.com/user-attachments/assets/77814d4e-3128-4970-a915-fadc8d9cc1fe)
+
 
 ## DESIGN STEPS
 
@@ -43,32 +47,95 @@ Plot the performance plot
 Evaluate the model with the testing data.
 
 ## PROGRAM
-### Name:
-### Register Number:
-```python
 
-Include your code here
+**Name:** Yuvdarshini S
 
+**Register Number:** 212221230126
+
+### Importing Required packages
 
 ```
-## Dataset Information
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from google.colab import auth
+import gspread
+from google.auth import default
+```
+### Authenticate the Google sheet
+```
+auth.authenticate_user()
+creds, _ = default()
+gc = gspread.authorize(creds)
+worksheet=gc.open('Untitled spreadsheet').sheet1
+data=worksheet.get_all_values()
 
-Include screenshot of the dataset
+dataset1=pd.DataFrame(data[1:],columns=data[0])
+dataset1=dataset1.astype({'Input':float})
+dataset1=dataset1.astype({'Output':float})
+dataset1.head()
+X=dataset1[['Input']].values
+y=dataset1[['Output']].values
+```
+### Split the testing and training data
+```
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.33,random_state=33)
+Scaler=MinMaxScaler()
+Scaler.fit(X_train)
+X_train1=Scaler.transform(X_train)
+
+```
+### Build the Deep learning Model
+```
+ai_brain=Sequential([
+     Dense(units=8,activation='relu'),
+     Dense(units=10,activation='relu'),
+     Dense(1)
+])
+
+ai_brain.compile(optimizer='adam',loss='mse')
+ai_brain.fit(X_train1,y_train,epochs=2000)
+
+loss_df = pd.DataFrame(ai_brain.history.history)
+loss_df.plot()
+```
+### Evaluate the Model
+```
+loss_df=pd.DataFrame(ai_brain.history.history)
+loss_df.plot()
+X_test1=Scaler.transform(X_test)
+ai_brain.evaluate(X_test1,y_test)
+X_n1=[[4]]
+X_n1=Scaler.transform(X_n1)
+ai_brain.predict(X_n1)
+
+```
+
+
 
 ## OUTPUT
+## Dataset Information
+![image](https://github.com/user-attachments/assets/fa9b7785-9a2a-4571-ad96-6f4edf8a9977)
+
 
 ### Training Loss Vs Iteration Plot
 
-Include your plot here
+![image](https://github.com/user-attachments/assets/b99d4561-0766-4971-b472-20ac4caac33e)
+
 
 ### Test Data Root Mean Squared Error
 
-Find the test data root mean squared error
+![image](https://github.com/user-attachments/assets/e9260b06-19f9-4220-a80a-40abb831a16c)
+
 
 ### New Sample Data Prediction
 
-Include your sample input and output here
+![image](https://github.com/user-attachments/assets/61b31885-3a38-401c-a060-b75c77105941)
+
+
 
 ## RESULT
 
-Include your result here
+Thus a basic neural network regression model for the given dataset is written and executed successfully.
