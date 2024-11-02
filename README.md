@@ -66,7 +66,7 @@ from google.colab import auth
 import gspread
 from google.auth import default
 ```
-### Authenticate the Google sheet
+### Authenticate the Google sheet and create Dataframe
 ```
 auth.authenticate_user()
 creds, _ = default()
@@ -75,11 +75,11 @@ worksheet=gc.open('student_data').sheet1
 data=worksheet.get_all_values()
 
 dataset1=pd.DataFrame(data[1:],columns=data[0])
-dataset1=dataset1.astype({'Input':float})
-dataset1=dataset1.astype({'Output':float})
+dataset1=dataset1.astype({'input':float})
+dataset1=dataset1.astype({'output':float})
 dataset1.head()
-X=dataset1[['Input']].values
-y=dataset1[['Output']].values
+X=dataset1[['input']].values
+y=dataset1[['output']].values
 ```
 ### Split the testing and training data
 ```
@@ -91,50 +91,70 @@ X_train1=Scaler.transform(X_train)
 ```
 ### Build the Deep learning Model
 ```
-ai_brain=Sequential([
-     Dense(units=8,activation='relu'),
-     Dense(units=10,activation='relu'),
-     Dense(1)
+#Create the model
+ai_brain = Sequential([
+    Dense(15, activation='relu',input_shape=[1]),
+    Dense(9, activation='relu'),
+    Dense(1)
 ])
 
-ai_brain.compile(optimizer='adam',loss='mse')
+#Compile the model
+ai_brain.compile(optimizer='rmsprop',loss='mse')
+
+#fit the model
 ai_brain.fit(X_train1,y_train,epochs=2000)
 
 loss_df = pd.DataFrame(ai_brain.history.history)
 loss_df.plot()
+print("Yuvadarshini S(212221230126)")
 ```
 ### Evaluate the Model
 ```
 loss_df=pd.DataFrame(ai_brain.history.history)
-loss_df.plot()
-X_test1=Scaler.transform(X_test)
-ai_brain.evaluate(X_test1,y_test)
-X_n1=[[4]]
-X_n1=Scaler.transform(X_n1)
-ai_brain.predict(X_n1)
 
+loss_df.plot()
+
+X_test1=Scaler.transform(X_test)
+
+ai_brain.evaluate(X_test1,y_test)
+
+from tensorflow.keras.metrics import RootMeanSquaredError as rmse
+err = rmse()
+preds = ai_brain.predict(X_test1)
+err(y_test,preds)
+
+err = rmse()
+print("Name: Yuvadarshini S\n")
+print("Root Mean Squred Error:",err(y_test,preds).numpy())
+
+X_n1=[[30]]
+
+X_n1_1=Scaler.transform(X_n1)
+
+print("Name: Yuvadarshini S\n")
+ai_brain.predict(X_n1_1)
 ```
 
 
 
 ## OUTPUT
 ## Dataset Information
-![image](https://github.com/user-attachments/assets/fa9b7785-9a2a-4571-ad96-6f4edf8a9977)
+![image](https://github.com/user-attachments/assets/86eca3a1-9c9a-4c4b-a197-0b37878d6479)
 
 
 ### Training Loss Vs Iteration Plot
 
-![image](https://github.com/user-attachments/assets/b99d4561-0766-4971-b472-20ac4caac33e)
+![image](https://github.com/user-attachments/assets/e9809b46-b0d6-46c3-834e-81ccba83ceb6)
 
 
 ### Test Data Root Mean Squared Error
 
-![image](https://github.com/user-attachments/assets/e9260b06-19f9-4220-a80a-40abb831a16c)
+![image](https://github.com/user-attachments/assets/eec88c5e-166c-41f7-8799-9aed9fc0f9f2)
 
 
 ### New Sample Data Prediction
 
-![image](https://github.com/user-attachments/assets/61b31885-3a38-401c-a060-b75c77105941)
+![image](https://github.com/user-attachments/assets/71bd54f5-f9d4-4a92-b911-ae3e288552bf)
 
 
 
